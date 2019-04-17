@@ -6,44 +6,72 @@
  * @flow
  */
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-type Props = {};
-export default class App extends Component<Props> {
+import React, { Component } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import FeedbackFormPage from "./Pages/FeedbakFormPage";
+import StartFeedbackPage from "./Pages/StartFeedbackPage";
+import ThankyouPage from "./Pages/ThankyouPage";
+import FirstTimePage from "./Pages/FirstTimePage";
+import AsyncStorage from "@react-native-community/async-storage";
+import { Root } from "native-base";
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { firstTime: false };
+  }
+  async componentDidMount() {
+    const firstTime = await AsyncStorage.getItem("firstTime");
+    if (firstTime == null) {
+      // not set -> first time
+      this.setState({ firstTime: true });
+    }
+  }
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
+    if (this.state.firstTime) {
+      return (
+        <Root>
+          <FirstTimeFlow />
+        </Root>
+      );
+    } else {
+      return (
+        <Root>
+          <AppContainer />
+        </Root>
+      );
+    }
   }
 }
+const RootStack = createStackNavigator({
+  Home: StartFeedbackPage,
+  Feedback: FeedbackFormPage,
+  Thankyou: ThankyouPage
+});
+const SpecialFlow = createStackNavigator({
+  FirstTime: FirstTimePage,
+  Home: StartFeedbackPage,
+  Feedback: FeedbackFormPage,
+  Thankyou: ThankyouPage
+});
+const AppContainer = createAppContainer(RootStack);
+const FirstTimeFlow = createAppContainer(SpecialFlow);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF"
   },
   welcome: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    textAlign: "center",
+    margin: 10
   },
   instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    textAlign: "center",
+    color: "#333333",
+    marginBottom: 5
+  }
 });
