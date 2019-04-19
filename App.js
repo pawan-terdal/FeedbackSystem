@@ -7,9 +7,9 @@
  */
 
 import React, { Component } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View, YellowBox } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import FeedbackFormPage from "./Pages/FeedbakFormPage";
+import FeedbackFormPage from "./Pages/FeedbackFormPage";
 import StartFeedbackPage from "./Pages/StartFeedbackPage";
 import ThankyouPage from "./Pages/ThankyouPage";
 import FirstTimePage from "./Pages/FirstTimePage";
@@ -19,12 +19,17 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = { firstTime: false };
+    YellowBox.ignoreWarnings(['Setting a timer']);
   }
   async componentDidMount() {
-    const firstTime = await AsyncStorage.getItem("firstTime");
-    if (firstTime == null) {
-      // not set -> first time
-      this.setState({ firstTime: true });
+    try {
+      const firstTime = await AsyncStorage.getItem("firstTime");
+      if (firstTime == null) {
+        // not set -> first time
+        this.setState({ firstTime: true });
+      }
+    } catch (error) {
+      alert(error);
     }
   }
   render() {

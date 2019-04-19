@@ -7,23 +7,8 @@
  */
 
 import React, { Component } from "react";
-import { Platform, StyleSheet, View } from "react-native";
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Footer,
-  FooterTab,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  Text,
-  Form
-} from "native-base";
-import GenerateForm from "react-native-form-builder";
+import { StyleSheet, View, Dimensions, Image, BackHandler } from "react-native";
+import { Container, Content, Button, Text, Toast } from "native-base";
 type Props = {};
 export default class StartFeedbackPage extends Component<Props> {
   constructor(props) {
@@ -31,23 +16,34 @@ export default class StartFeedbackPage extends Component<Props> {
     this.state = {};
   }
   static navigationOptions = {
-    title: "Home",
-    headerLeft: null
+    header: null
   };
-  login = () => {
-    const formValues = this.formGenerator.getValues();
-    var emailId = formValues.emailId;
-    console.log("FORM VALUES", emailId);
-    this.validateEmail(emailId);
-  };
-  validateEmail = (emailId) => {
-    console.log(emailId);
-    
+  async componentWillUnmount() {
+    BackHandler.removeEventListener("hardwareBackPress", this.handleBackButton);
+  }
+  async componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
+  }
+
+  handleBackButton() {
+    Toast.show({
+      text: "Not allowed to go back !",
+      buttonText: "Okay",
+      type: "danger",
+      duration: 3000
+    });
+    return true;
   }
   render() {
     return (
-      <Container>
+      <Container style={{ backgroundColor: "#e8e6da" }}>
         <Content>
+          <Image style={styles.image} source={require("./pes_logo.png")} />
+          <View>
+            <Text style={styles.text}>
+              Project Mela <Text style={styles.secondText}>2019</Text>{" "}
+            </Text>
+          </View>
           <Button
             rounded
             large
@@ -56,33 +52,11 @@ export default class StartFeedbackPage extends Component<Props> {
           >
             <Text>Start Feedback</Text>
           </Button>
-          <View>
-            <GenerateForm
-              ref={c => {
-                this.formGenerator = c;
-              }}
-              fields={fields}
-            />
-          </View>
-          <View style={styles.submitButton}>
-            <Button rounded onPress={this.login}>
-              <Text>Login</Text>
-            </Button>
-          </View>
         </Content>
       </Container>
     );
   }
 }
-const fields = [
-  {
-    type: "text",
-    name: "emailId",
-    required: true,
-    icon: "ios-person",
-    label: "email id"
-  }
-];
 
 const styles = StyleSheet.create({
   container: {
@@ -104,6 +78,26 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: "center",
     justifyContent: "center",
-    marginBottom: 100
+    marginTop: Dimensions.get("window").height * 0.5
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginTop: 20,
+    alignSelf: "center"
+  },
+  text: {
+    fontSize: 45,
+    alignSelf: "center",
+    marginTop: 20,
+    color: "#012e77",
+    fontWeight: "bold"
+  },
+  secondText: {
+    fontSize: 45,
+    alignSelf: "center",
+    marginTop: 20,
+    color: "#db1313",
+    fontWeight: "bold"
   }
 });

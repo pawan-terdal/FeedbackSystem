@@ -7,21 +7,13 @@
  */
 
 import React, { Component } from "react";
-import { Platform, StyleSheet, View, AsyncStorage } from "react-native";
+import { StyleSheet, View, Dimensions, BackHandler } from "react-native";
 import {
   Container,
-  Header,
-  Title,
   Content,
-  Footer,
-  FooterTab,
   Button,
-  Left,
-  Right,
-  Body,
   Icon,
   Text,
-  Form,
   Toast
 } from "native-base";
 type Props = {};
@@ -31,28 +23,41 @@ export default class StartFeedbackPage extends Component<Props> {
     this.state = {};
   }
   static navigationOptions = {
-    title: "Thank you"
+    header: null
   };
+  async componentWillUnmount() {
+    BackHandler.removeEventListener("hardwareBackPress", this.handleBackButton);
+  }
+  async componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
+  }
 
+  handleBackButton() {
+    Toast.show({
+      text: "Not allowed to go back !",
+      buttonText: "Okay",
+      type: "danger",
+      duration: 3000
+    });
+    return true;
+  }
   render() {
     return (
-      <Container>
+      <Container style={{ backgroundColor: "#e8e6da" }}>
         <Content>
-          <Text>Thank you for your feedback</Text>
-          <Button onPress={() => this.props.navigation.navigate("Home")}>
-            <Text>Go back Home</Text>
-          </Button>
-          <Button
-            onPress={() =>
-              Toast.show({
-                text: "Wrong password!",
-                buttonText: "Okay",
-                type: "danger"
-              })
-            }
-          >
-            <Text>Toast</Text>
-          </Button>
+          <View>
+            <Icon name="ios-checkmark-circle-outline" style={styles.check} />
+            <Text style = {styles.text}>Your feedback has been recorded</Text>
+            <Text style = {styles.text}>Thank you !</Text>
+            <Button
+              rounded
+              large
+              style={styles.button}
+              onPress={() => this.props.navigation.navigate("Home")}
+            >
+              <Text>Finish</Text>
+            </Button>
+          </View>
         </Content>
       </Container>
     );
@@ -60,20 +65,21 @@ export default class StartFeedbackPage extends Component<Props> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF"
+  check: {
+    color: "green",
+    fontSize: 150,
+    alignSelf: "center",
+    marginTop: Dimensions.get("window").height * 0.1,
+    marginBottom: 20
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
+  button: {
+    alignSelf: "center",
+    marginTop: Dimensions.get("window").height * 0.4
   },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5
+  text: {
+    fontSize: 25,
+    margin: 10,
+    justifyContent: 'center',
+    alignSelf: 'center'
   }
 });
