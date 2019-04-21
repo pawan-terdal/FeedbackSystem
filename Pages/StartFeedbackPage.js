@@ -8,7 +8,11 @@
 
 import React, { Component } from "react";
 import { StyleSheet, View, Dimensions, Image, BackHandler } from "react-native";
-import { Container, Content, Button, Text, Toast } from "native-base";
+import { Container, Content, Button, Text, Toast, Footer } from "native-base";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 type Props = {};
 export default class StartFeedbackPage extends Component<Props> {
   constructor(props) {
@@ -34,51 +38,59 @@ export default class StartFeedbackPage extends Component<Props> {
     });
     return true;
   }
+  shouldNavigate = () => {
+    var currentDateTime = new Date();
+    var melaDateTime = new Date(2019, 3, 24, 0, 15, 0, 0);
+    var hoursLeft = Math.trunc(Math.abs(melaDateTime - currentDateTime) / 36e5);
+    var minsLeft = Math.round(
+      (Math.abs(melaDateTime - currentDateTime) % 36e5) / 60000
+    );
+    if (melaDateTime.getTime() - currentDateTime.getTime() < 0) {
+      this.props.navigation.navigate("Feedback");
+    } else {
+      Toast.show({
+        text: hoursLeft + " hrs "+ minsLeft+" mins left for Project Mela to start",
+        buttonText: "Okay",
+        type: "danger",
+        duration: 4000
+      });
+    }
+  };
   render() {
     return (
       <Container style={{ backgroundColor: "#e8e6da" }}>
         <Content>
-          <Image style={styles.image} source={require("./pes_logo.png")} />
-          <View>
+          <View style={styles.view}>
+            <Image style={styles.image} source={require("./pes_logo.png")} />
+
             <Text style={styles.text}>
               Project Mela <Text style={styles.secondText}>2019</Text>{" "}
             </Text>
           </View>
-          <Button
-            rounded
-            large
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate("Feedback")}
-          >
-            <Text>Start Feedback</Text>
-          </Button>
         </Content>
+        <Footer>
+          <Button
+            transparent
+            style={styles.button}
+            onPress={this.shouldNavigate}
+          >
+            <Text style={{ color: "white" }}>Start Feedback</Text>
+          </Button>
+        </Footer>
       </Container>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF"
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
-  },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5
+  view: {
+    width: wp("100%"),
+    height: hp("80%"),
+    marginTop: hp("5%")
   },
   button: {
     alignSelf: "center",
-    justifyContent: "center",
-    marginTop: Dimensions.get("window").height * 0.5
+    justifyContent: "center"
   },
   image: {
     width: 200,
@@ -87,14 +99,14 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   text: {
-    fontSize: 45,
+    fontSize: 35,
     alignSelf: "center",
     marginTop: 20,
     color: "#012e77",
     fontWeight: "bold"
   },
   secondText: {
-    fontSize: 45,
+    fontSize: 35,
     alignSelf: "center",
     marginTop: 20,
     color: "#db1313",

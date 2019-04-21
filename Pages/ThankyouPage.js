@@ -14,8 +14,13 @@ import {
   Button,
   Icon,
   Text,
-  Toast
+  Toast,
+  Footer
 } from "native-base";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 type Props = {};
 export default class StartFeedbackPage extends Component<Props> {
   constructor(props) {
@@ -45,20 +50,22 @@ export default class StartFeedbackPage extends Component<Props> {
     return (
       <Container style={{ backgroundColor: "#e8e6da" }}>
         <Content>
-          <View>
+          <View style={styles.view}>
             <Icon name="ios-checkmark-circle-outline" style={styles.check} />
-            <Text style = {styles.text}>Your feedback has been recorded</Text>
-            <Text style = {styles.text}>Thank you !</Text>
-            <Button
-              rounded
-              large
-              style={styles.button}
-              onPress={() => this.props.navigation.navigate("Home")}
-            >
-              <Text>Finish</Text>
-            </Button>
+            <Text style={styles.text}>Feedback recorded</Text>
+            <Text style={styles.text}>Thank you !</Text>
           </View>
         </Content>
+        <Footer>
+          <Button
+            transparent
+            
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate("Home")}
+          >
+            <Text style = {{color: 'white'}}>Finish</Text>
+          </Button>
+        </Footer>
       </Container>
     );
   }
@@ -68,18 +75,20 @@ const styles = StyleSheet.create({
   check: {
     color: "green",
     fontSize: 150,
-    alignSelf: "center",
-    marginTop: Dimensions.get("window").height * 0.1,
-    marginBottom: 20
+    alignSelf: "center"
   },
   button: {
-    alignSelf: "center",
-    marginTop: Dimensions.get("window").height * 0.4
+    alignSelf: "center"
   },
   text: {
     fontSize: 25,
-    margin: 10,
-    justifyContent: 'center',
-    alignSelf: 'center'
+    marginTop: wp("5%"),
+    justifyContent: "center",
+    alignSelf: "center"
+  },
+  view: {
+    width: wp("100%"),
+    height: hp("80%"),
+    marginTop: hp("5%")
   }
 });

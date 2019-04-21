@@ -9,7 +9,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
-import { Container, Content, Button, Text, Toast } from "native-base";
+import { Container, Content, Button, Text, Toast, Footer } from "native-base";
 import dbConn from "../Config/Firestore";
 import GenerateForm from "react-native-form-builder";
 import LoadingPage from "../Components/LoadingPage";
@@ -27,7 +27,6 @@ export default class FirstTimePage extends Component<Props> {
       this.setState({ done: false });
       await AsyncStorage.setItem("email", emailId);
       await AsyncStorage.setItem("branch", branches);
-      await AsyncStorage.setItem("firstTime", "false");
       console.log("Branch is - ");
 
       let email = await AsyncStorage.getItem("email");
@@ -35,7 +34,7 @@ export default class FirstTimePage extends Component<Props> {
       console.log("Branch is ------------------------------- ", branch);
 
       if (email) {
-        dbConn
+        await dbConn
           .collection(branch)
           .doc(email)
           .set({
@@ -45,6 +44,7 @@ export default class FirstTimePage extends Component<Props> {
             technology: 0,
             visits: 0
           });
+        await AsyncStorage.setItem("firstTime", "false");
         this.setState({ done: true });
         Toast.show({
           text: "Email registered successfully",
@@ -121,8 +121,8 @@ export default class FirstTimePage extends Component<Props> {
                 Important
               </Text>
               <Text style={styles.text}>
-                1) Please be extra careful while entering the email id. Summary of
-                the feedback will be sent to this mail id.
+                1) Please be extra careful while entering the email id. Summary
+                of the feedback will be sent to this mail id.
               </Text>
               <Text style={styles.text}>
                 2) You will{" "}
@@ -135,14 +135,22 @@ export default class FirstTimePage extends Component<Props> {
                 reach you.
               </Text>
               <Text style={styles.text}>
-                4) Make sure this device has access to internet connection during
-                the Project Mela.
+                4) Make sure this device has access to internet connection
+                during the Project Mela.
+              </Text>
+              <Text style={styles.text}>
+                5) In the off-chance that something goes wrong, please uninstall and re-install the app.
+              </Text>
+              <Text style={styles.text}>
+                6) The summary of your feedback will be sent within 48 hrs after the Project Mela. 
               </Text>
             </View>
-            <Button rounded onPress={this.login} style={styles.button}>
-              <Text>Register email</Text>
-            </Button>
           </Content>
+          <Footer>
+            <Button transparent onPress={this.login} style={styles.button}>
+              <Text style = {{color: 'white'}}>Register email</Text>
+            </Button>
+          </Footer>
         </Container>
       );
     }
@@ -174,8 +182,7 @@ const fields = [
 const styles = StyleSheet.create({
   button: {
     alignSelf: "center",
-    justifyContent: "center",
-    marginTop: Dimensions.get("window").height * 0.22
+    justifyContent: "center"
   },
   form: {
     marginTop: 20

@@ -20,10 +20,16 @@ import {
   Grid,
   Col,
   Row,
-  Toast
+  Toast,
+  Footer,
+  FooterTab
 } from "native-base";
 import { AirbnbRating } from "react-native-ratings";
 import LoadingPage from "../Components/LoadingPage";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 type Props = {};
 export default class FeedbackFormPage extends Component<Props> {
   constructor(props) {
@@ -99,7 +105,7 @@ export default class FeedbackFormPage extends Component<Props> {
             <Grid>
               <Row style={styles.row}>
                 <Col>
-                  <Text style={styles.text}>1. Project Idea</Text>
+                  <Text style={styles.text}>Project Idea</Text>
                 </Col>
                 <Col>
                   <View style={styles.star}>
@@ -114,7 +120,7 @@ export default class FeedbackFormPage extends Component<Props> {
               </Row>
               <Row style={styles.row}>
                 <Col>
-                  <Text style={styles.text}>2. Demonstration</Text>
+                  <Text style={styles.text}>Demonstration</Text>
                 </Col>
                 <Col>
                   <View style={styles.star}>
@@ -129,7 +135,7 @@ export default class FeedbackFormPage extends Component<Props> {
               </Row>
               <Row style={styles.row}>
                 <Col>
-                  <Text style={styles.text}>3. Explanation</Text>
+                  <Text style={styles.text}>Explanation</Text>
                 </Col>
                 <Col>
                   <View style={styles.star}>
@@ -144,7 +150,7 @@ export default class FeedbackFormPage extends Component<Props> {
               </Row>
               <Row style={styles.row}>
                 <Col>
-                  <Text style={styles.text}>4. Technology</Text>
+                  <Text style={styles.text}>Technology</Text>
                 </Col>
                 <Col>
                   <View style={styles.star}>
@@ -158,15 +164,12 @@ export default class FeedbackFormPage extends Component<Props> {
                 </Col>
               </Row>
             </Grid>
-            <Button
-              rounded
-              large
-              style={styles.button}
-              onPress={this.submitFeedback}
-            >
-              <Text>finish feedback</Text>
-            </Button>
           </Content>
+          <Footer>
+            <Button transparent onPress={this.submitFeedback}>
+              <Text style = {{color: 'white'}}>finish feedback</Text>
+            </Button>
+          </Footer>
         </Container>
       );
     }
@@ -175,7 +178,8 @@ export default class FeedbackFormPage extends Component<Props> {
 
 const styles = StyleSheet.create({
   row: {
-    marginTop: 20
+    marginTop: wp("5%"),
+    width: wp("98%")
   },
   text: {
     fontSize: 25,
@@ -191,6 +195,6 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: "center",
     justifyContent: "center",
-    marginTop: Dimensions.get("window").height * 0.25
+    marginBottom: hp("90%")
   }
 });
